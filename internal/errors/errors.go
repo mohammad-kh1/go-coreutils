@@ -5,6 +5,9 @@ import (
 	"os"
 )
 
+const NoFieldErrorMsg = ` you must specify a list of bytes, characters, or fields
+Try 'cut --help' for more information.`
+
 func HandleFileError(commandName string, fileName string, err error) bool {
 	if err == nil {
 		return false
@@ -24,4 +27,8 @@ func HandleFileError(commandName string, fileName string, err error) bool {
 		return true
 	}
 
+}
+
+func CutFieldError(commandName string) {
+	fmt.Fprintf(os.Stderr, "%s:%s\n", commandName, NoFieldErrorMsg)
 }
