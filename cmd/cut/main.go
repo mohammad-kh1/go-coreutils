@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -15,6 +14,8 @@ var (
 	delimiter string
 	field     int
 )
+
+const bufferSize = 1 << 20 // 1MB
 
 const HELP = `
 Usage: cut OPTION... [FILE]...
@@ -71,18 +72,18 @@ var rootCmd = &cobra.Command{
 		}
 		for _, v := range args {
 			//check for file or dir
-			fi , errStat := os.Stat(v)
-			if errors.HandleFileError("cut" , v , errStat){
+			fi, errStat := os.Stat(v)
+			if errors.HandleFileError("cut", v, errStat) {
 				return
 			}
-			if fi.Mode().IsDir(){
-				errors.DirectoryError("cut" , v)
+			if fi.Mode().IsDir() {
+				errors.DirectoryError("cut", v)
 				return
 			}
 
 			//reading from files
 			file, err := os.Open(v)
-			
+
 			if errors.HandleFileError("cut", v, err) {
 				return
 			}
@@ -99,10 +100,14 @@ func init() {
 
 func cutPrint(r io.Reader) {
 	scanner := bufio.NewScanner(r)
+	writer := bufio.NewWriterSize(os.Stdout, bufferSize)
+	defer writer.Flush()
+
 	for scanner.Scan() {
 		fields := strings.Split(scanner.Text(), delimiter)
 		if field > 0 && field <= len(fields) {
-			fmt.Println(fields[field-1])
+			writer.WriteString(fields[field-1])
+			writer.WriteByte('\n')
 		}
 	}
 }
