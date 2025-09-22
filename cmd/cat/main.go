@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"os"
+	"strconv"
 
 	"github.com/mohammad-kh1/go-coreutils/internal/errors"
 	"github.com/spf13/cobra"
@@ -13,6 +13,8 @@ import (
 var (
 	numberLines bool
 )
+
+const bufferSize = 1 << 20 // 1MB
 
 const HELP = `
 With no FILE, or when FILE is -, read standard input.
@@ -78,15 +80,27 @@ func init() {
 	rootCmd.Flags().BoolVarP(&numberLines, "number", "n", false, "number all output lines")
 }
 
+
+
 func printFile(r io.Reader) {
 	scanner := bufio.NewScanner(r)
+	writer  := bufio.NewWriterSize(os.Stdout , bufferSize)
+	defer writer.Flush()
+
 	lineCount := 0
-	for scanner.Scan() {
+	for scanner.Scan(){
 		lineCount++
+		text := scanner.Text()
+
 		if numberLines {
-			fmt.Printf("\t%d   %s\n", lineCount, scanner.Text())
-		} else {
-			fmt.Println(scanner.Text())
+			// write line number + tab + text + newline
+			writer.WriteString(strconv.Itoa(lineCount))
+			writer.WriteByte('\t')
+			writer.WriteString(text)
+			writer.WriteByte('\n')
+		}else{
+			writer.WriteString(text)
+			writer.WriteByte('\n')
 		}
 	}
 }
