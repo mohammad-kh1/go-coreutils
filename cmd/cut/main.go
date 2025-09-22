@@ -70,13 +70,24 @@ var rootCmd = &cobra.Command{
 			return
 		}
 		for _, v := range args {
+			//check for file or dir
+			fi , errStat := os.Stat(v)
+			if errors.HandleFileError("cut" , v , errStat){
+				return
+			}
+			if fi.Mode().IsDir(){
+				errors.DirectoryError("cut" , v)
+				return
+			}
+
 			//reading from files
 			file, err := os.Open(v)
-			fileError := errors.HandleFileError("cut", v, err)
-			if fileError {
+			
+			if errors.HandleFileError("cut", v, err) {
 				return
 			}
 			cutPrint(file)
+			defer file.Close()
 		}
 	},
 }

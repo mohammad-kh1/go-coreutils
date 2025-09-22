@@ -55,9 +55,17 @@ var rootCmd = &cobra.Command{
 				printFile(os.Stdin)
 				return
 			}
-
+			fi , errStat := os.Stat(v)
+			if errors.HandleFileError("cat", v, errStat) {
+				return 
+			}
+			if fi.Mode().IsDir(){
+				errors.DirectoryError("cat" , v)
+			}
 			file, err := os.Open(v)
-			errors.HandleFileError("cat", v, err)
+			if errors.HandleFileError("cat", v, err) {
+				return 
+			}
 
 			printFile(file)
 
