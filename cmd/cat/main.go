@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/mohammad-kh1/go-coreutils/internal/errors"
 	"github.com/spf13/cobra"
@@ -12,6 +13,7 @@ import (
 
 var (
 	numberLines bool
+	numberNonBlank bool
 )
 
 const bufferSize = 1 << 20 // 1MB
@@ -78,6 +80,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.Flags().BoolVarP(&numberLines, "number", "n", false, "number all output lines")
+	rootCmd.Flags().BoolVarP(&numberNonBlank , "nomber-nonblank" , "b" , false , "number nonempty output lines, overrides -n")
 }
 
 
@@ -89,15 +92,32 @@ func printFile(r io.Reader) {
 
 	lineCount := 0
 	for scanner.Scan(){
-		lineCount++
 		text := scanner.Text()
 
-		if numberLines {
+
+		if numberNonBlank {
 			// write line number + tab + text + newline
+			if strings.TrimSpace(text) != ""{
+				lineCount++
+				writer.WriteString("    ")
+				writer.WriteString(strconv.Itoa(lineCount))
+				writer.WriteString("  ")
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+			}else{
+				writer.WriteString("    ")
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+			}
+
+		}else if numberLines{
+			lineCount++
+			writer.WriteString("    ")
 			writer.WriteString(strconv.Itoa(lineCount))
-			writer.WriteByte('\t')
+			writer.WriteString("  ")
 			writer.WriteString(text)
 			writer.WriteByte('\n')
+
 		}else{
 			writer.WriteString(text)
 			writer.WriteByte('\n')
