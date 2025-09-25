@@ -12,12 +12,15 @@ import (
 )
 
 var (
-	numberLines bool
-	numberNonBlank bool
+	numberLines     bool
+	numberNonBlank  bool
 	showEnds	bool
+	squeezeBlank 	bool
+	showTabs	bool
 )
 
 const bufferSize = 1 << 20 // 1MB
+
 
 const HELP = `
 With no FILE, or when FILE is -, read standard input.
@@ -83,10 +86,10 @@ func init() {
 	rootCmd.Flags().BoolVarP(&numberLines, "number", "n", false, "number all output lines")
 	rootCmd.Flags().BoolVarP(&numberNonBlank , "nomber-nonblank" , "b" , false , "number nonempty output lines, overrides -n")
 	rootCmd.Flags().BoolVarP(&showEnds , "show-ends" , "E"  , false , "display $ at end of each line")
+	rootCmd.Flags().BoolVarP(&squeezeBlank , "squeeze-blank" , "s" , false , "suppress repeated empty output lines")
+	rootCmd.Flags().BoolVarP(&showTabs , "show-tabs" , "T" , false , "display TAB characters as ^I")
+
 }
-
-
-
 
 func printFile(r io.Reader) {
 	scanner := bufio.NewScanner(r)
@@ -94,10 +97,13 @@ func printFile(r io.Reader) {
 	defer writer.Flush()
 
 	lineCount := 0
-	for scanner.Scan(){
+		for scanner.Scan(){
 		text := scanner.Text()
 		if showEnds {
 			text += "$"
+		}
+		if showTabs{
+			text = strings.ReplaceAll(text , "\t" ,"^I")
 		}
 
 		if numberNonBlank {
@@ -117,6 +123,7 @@ func printFile(r io.Reader) {
 
 		}else if numberLines{
 			lineCount++
+			
 			writer.WriteString("    ")
 			writer.WriteString(strconv.Itoa(lineCount))
 			writer.WriteString("  ")
@@ -129,7 +136,6 @@ func printFile(r io.Reader) {
 		}
 	}
 }
-
 func main() {
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
