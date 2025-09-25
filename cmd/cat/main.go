@@ -14,6 +14,7 @@ import (
 var (
 	numberLines bool
 	numberNonBlank bool
+	showEnds	bool
 )
 
 const bufferSize = 1 << 20 // 1MB
@@ -81,7 +82,9 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.Flags().BoolVarP(&numberLines, "number", "n", false, "number all output lines")
 	rootCmd.Flags().BoolVarP(&numberNonBlank , "nomber-nonblank" , "b" , false , "number nonempty output lines, overrides -n")
+	rootCmd.Flags().BoolVarP(&showEnds , "show-ends" , "E"  , false , "display $ at end of each line")
 }
+
 
 
 
@@ -93,7 +96,9 @@ func printFile(r io.Reader) {
 	lineCount := 0
 	for scanner.Scan(){
 		text := scanner.Text()
-
+		if showEnds {
+			text += "$"
+		}
 
 		if numberNonBlank {
 			// write line number + tab + text + newline
