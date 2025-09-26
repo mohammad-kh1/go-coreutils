@@ -12,15 +12,15 @@ import (
 )
 
 var (
-	numberLines     bool
-	numberNonBlank  bool
-	showEnds	bool
-	squeezeBlank 	bool
-	showTabs	bool
+	numberLines    bool
+	numberNonBlank bool
+	showEnds       bool
+	squeezeBlank   bool
+	showTabs       bool
+	U              bool
 )
 
 const bufferSize = 1 << 20 // 1MB
-
 
 const HELP = `
 With no FILE, or when FILE is -, read standard input.
@@ -63,16 +63,16 @@ var rootCmd = &cobra.Command{
 				printFile(os.Stdin)
 				return
 			}
-			fi , errStat := os.Stat(v)
+			fi, errStat := os.Stat(v)
 			if errors.HandleFileError("cat", v, errStat) {
-				return 
+				return
 			}
-			if fi.Mode().IsDir(){
-				errors.DirectoryError("cat" , v)
+			if fi.Mode().IsDir() {
+				errors.DirectoryError("cat", v)
 			}
 			file, err := os.Open(v)
 			if errors.HandleFileError("cat", v, err) {
-				return 
+				return
 			}
 
 			printFile(file)
@@ -84,55 +84,92 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.Flags().BoolVarP(&numberLines, "number", "n", false, "number all output lines")
-	rootCmd.Flags().BoolVarP(&numberNonBlank , "nomber-nonblank" , "b" , false , "number nonempty output lines, overrides -n")
-	rootCmd.Flags().BoolVarP(&showEnds , "show-ends" , "E"  , false , "display $ at end of each line")
-	rootCmd.Flags().BoolVarP(&squeezeBlank , "squeeze-blank" , "s" , false , "suppress repeated empty output lines")
-	rootCmd.Flags().BoolVarP(&showTabs , "show-tabs" , "T" , false , "display TAB characters as ^I")
-
+	rootCmd.Flags().BoolVarP(&numberNonBlank, "nomber-nonblank", "b", false, "number nonempty output lines, overrides -n")
+	rootCmd.Flags().BoolVarP(&showEnds, "show-ends", "E", false, "display $ at end of each line")
+	rootCmd.Flags().BoolVarP(&squeezeBlank, "squeeze-blank", "s", false, "suppress repeated empty output lines")
+	rootCmd.Flags().BoolVarP(&showTabs, "show-tabs", "T", false, "display TAB characters as ^I")
+	rootCmd.Flags().BoolVarP(&U, "u", "u", false, "(ignored)")
 }
 
 func printFile(r io.Reader) {
 	scanner := bufio.NewScanner(r)
-	writer  := bufio.NewWriterSize(os.Stdout , bufferSize)
+	writer := bufio.NewWriterSize(os.Stdout, bufferSize)
 	defer writer.Flush()
 
-	lineCount := 0
-		for scanner.Scan(){
+	lineCount := 1
+	printBlankLine := true
+
+	for scanner.Scan() {
 		text := scanner.Text()
 		if showEnds {
 			text += "$"
 		}
-		if showTabs{
-			text = strings.ReplaceAll(text , "\t" ,"^I")
+		if showTabs {
+			text = strings.ReplaceAll(text, "\t", "^I")
 		}
 
 		if numberNonBlank {
 			// write line number + tab + text + newline
-			if strings.TrimSpace(text) != ""{
-				lineCount++
+			if strings.TrimSpace(text) == "" && printBlankLine && squeezeBlank {
+				writer.WriteString("    ")
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				printBlankLine = false
+			}
+			if strings.TrimSpace(text) != "" {
 				writer.WriteString("    ")
 				writer.WriteString(strconv.Itoa(lineCount))
 				writer.WriteString("  ")
 				writer.WriteString(text)
 				writer.WriteByte('\n')
-			}else{
+				printBlankLine = true
+				lineCount++
+			} else if squeezeBlank == false {
 				writer.WriteString("    ")
 				writer.WriteString(text)
 				writer.WriteByte('\n')
+				printBlankLine = true
 			}
 
-		}else if numberLines{
-			lineCount++
-			
-			writer.WriteString("    ")
-			writer.WriteString(strconv.Itoa(lineCount))
-			writer.WriteString("  ")
-			writer.WriteString(text)
-			writer.WriteByte('\n')
+		} else if numberLines {
+			if strings.TrimSpace(text) == "" && printBlankLine && squeezeBlank {
+				writer.WriteString("    ")
+				writer.WriteString(strconv.Itoa(lineCount))
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				lineCount++
+				printBlankLine = false
+			} else if strings.TrimSpace(text) != "" {
+				writer.WriteString("    ")
+				writer.WriteString(strconv.Itoa(lineCount))
+				writer.WriteString("  ")
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				printBlankLine = true
+				lineCount++
+			} else if squeezeBlank == false {
+				writer.WriteString("    ")
+				writer.WriteString(strconv.Itoa(lineCount))
+				writer.WriteString("  ")
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				lineCount++
+			}
 
-		}else{
-			writer.WriteString(text)
-			writer.WriteByte('\n')
+		} else {
+			if strings.TrimSpace(text) == "" && squeezeBlank && printBlankLine {
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				printBlankLine = false
+				continue
+			} else if strings.TrimSpace(text) != "" {
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+				printBlankLine = true
+			} else if squeezeBlank == false {
+				writer.WriteString(text)
+				writer.WriteByte('\n')
+			}
 		}
 	}
 }
