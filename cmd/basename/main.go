@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/mohammad-kh1/go-coreutils/internal/utils"
-
 	"github.com/spf13/cobra"
 
 )
