@@ -1,2 +1,115 @@
 # go-coreutils
-A simple clone of GNU coreutils implemented in Go
+GNU coreutils implemented in Go
+
+---
+
+
+## ✅ Implemented Tools
+- [x] `basename`  
+- [x] `cat`  
+- [x] `cut`  
+- [x] `false`  
+- [x] `rev`  
+- [x] `true`  
+- [x] `yes`  
+- [x] arch 
+
+---
+
+
+## 📌 Not Yet Implemented
+- [ ] base32  
+- [ ] base64  
+- [ ] chcon  
+- [ ] chgrp  
+- [ ] chmod  
+- [ ] chown  
+- [ ] cksum  
+- [ ] comm  
+- [ ] cp  
+- [ ] csplit  
+- [ ] date  
+- [ ] dd  
+- [ ] df  
+- [ ] dir  
+- [ ] dircolors  
+- [ ] dirname  
+- [ ] du  
+- [ ] echo  
+- [ ] env  
+- [ ] expand  
+- [ ] expr  
+- [ ] factor  
+- [ ] groups  
+- [ ] head  
+- [ ] hostid  
+- [ ] hostname  
+- [ ] id  
+- [ ] install  
+- [ ] join  
+- [ ] link  
+- [ ] ln  
+- [ ] logname  
+- [ ] ls  
+- [ ] md5sum  
+- [ ] mkdir  
+- [ ] mkfifo  
+- [ ] mknod  
+- [ ] mktemp  
+- [ ] mv  
+- [ ] nice  
+- [ ] nl  
+- [ ] nohup  
+- [ ] nproc  
+- [ ] numfmt  
+- [ ] od  
+- [ ] paste  
+- [ ] pathchk  
+- [ ] pinky  
+- [ ] pr  
+- [ ] printenv  
+- [ ] printf  
+- [ ] ptx  
+- [ ] pwd  
+- [ ] readlink  
+- [ ] realpath  
+- [ ] rm  
+- [ ] rmdir  
+- [ ] runcon  
+- [ ] seq  
+- [ ] sha1sum  
+- [ ] sha224sum  
+- [ ] sha256sum  
+- [ ] sha384sum  
+- [ ] sha512sum  
+- [ ] shred  
+- [ ] shuf  
+- [ ] sleep  
+- [ ] sort  
+- [ ] split  
+- [ ] stat  
+- [ ] stdbuf  
+- [ ] stty  
+- [ ] sum  
+- [ ] sync  
+- [ ] tac  
+- [ ] tail  
+- [ ] tee  
+- [ ] test  
+- [ ] timeout  
+- [ ] touch  
+- [ ] tr  
+- [ ] truncate  
+- [ ] tsort  
+- [ ] tty  
+- [ ] uname  
+- [ ] unexpand  
+- [ ] uniq  
+- [ ] unlink  
+- [ ] uptime  
+- [ ] users  
+- [ ] vdir  
+- [ ] wc  
+- [ ] who  
+- [ ] whoami  
+
