@@ -13,6 +13,7 @@ GNU coreutils implemented in Go
 - [x] `true`  
 - [x] `yes`  
 - [x] `arch` 
+- [x] `whoami`
 
 ---
 
@@ -111,5 +112,4 @@ GNU coreutils implemented in Go
 - [ ] vdir  
 - [ ] wc  
 - [ ] who  
-- [ ] whoami  
 
