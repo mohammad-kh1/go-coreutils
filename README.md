@@ -12,7 +12,7 @@ GNU coreutils implemented in Go
 - [x] `rev`  
 - [x] `true`  
 - [x] `yes`  
-- [x] arch 
+- [x] `arch` 
 
 ---
 
