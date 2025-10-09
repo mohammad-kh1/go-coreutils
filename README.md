@@ -14,6 +14,7 @@ GNU coreutils implemented in Go
 - [x] `yes`  
 - [x] `arch` 
 - [x] `whoami`
+- [x] `head`  
 
 ---
 
@@ -42,7 +43,6 @@ GNU coreutils implemented in Go
 - [ ] expr  
 - [ ] factor  
 - [ ] groups  
-- [ ] head  
 - [ ] hostid  
 - [ ] hostname  
 - [ ] id  
