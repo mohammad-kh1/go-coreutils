@@ -16,7 +16,7 @@ GNU coreutils implemented in Go
 - [x] `whoami`
 - [x] `head`
 - [x] `hostid`
-
+- [x] `sleep`
 ---
 
 
@@ -85,7 +85,6 @@ GNU coreutils implemented in Go
 - [ ] sha512sum
 - [ ] shred
 - [ ] shuf
-- [ ] sleep
 - [ ] sort
 - [ ] split
 - [ ] stat
