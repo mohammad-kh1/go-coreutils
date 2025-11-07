@@ -17,6 +17,7 @@ GNU coreutils implemented in Go
 - [x] `head`
 - [x] `hostid`
 - [x] `sleep`
+- [x] `tty`
 ---
 
 
@@ -101,7 +102,6 @@ GNU coreutils implemented in Go
 - [ ] tr
 - [ ] truncate
 - [ ] tsort
-- [ ] tty
 - [ ] uname
 - [ ] unexpand
 - [ ] uniq
