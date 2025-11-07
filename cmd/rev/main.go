@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 
@@ -35,7 +36,7 @@ var rootCmd = &cobra.Command{
 	Long:  HELP,
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
-			utils.RevVersion()
+			fmt.Println(utils.REV_VERSION)
 			return
 		}
 		if len(args) == 0 {

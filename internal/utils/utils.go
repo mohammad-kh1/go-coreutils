@@ -12,6 +12,7 @@ const HEAD_VERSION = "1.0.0"
 const HOSTID_VERSION = "1.0.0"
 const SLEEP_VERSION = "1.0.0"
 const YES_VERSION = "1.0.0"
+const TTY_VERSION = "1.0.0"
 
 func RevVersion() {
 	fmt.Println(REV_VERSION)
